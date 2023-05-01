@@ -1,6 +1,7 @@
 cycle_start_min=1  # minute when first new cycle of the day starts
 cycle_duration_min=10  # duration of one measurement cycle in minutes
-consider_last_n_min=10  # consider files generated in the last minutes normally equal to cycle duration. For longer periods make sure to use timestamp_style=cycle_start 
+consider_last_n_min=525600 #just for testing #10  # consider files generated in the last minutes normally equal to cycle duration. For longer periods make sure to use timestamp_style=cycle_start 
+echo "testversion with consider_last_n_min=525600 for sending all files generated in last year. Undo to =10 once test is done"
 data_dir=../data/rpg_rename/
 outdir=../data/rpg_rename/out/
 timestamp_style=cycle_start  # cycle_start: assumed start of measurement cycle; min_in: smallest input timestamp matching period. CARE: min_in only works if consider_last_n_min makes sure that files from only one obs cycle are consdiered 
