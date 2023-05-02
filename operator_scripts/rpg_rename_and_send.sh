@@ -4,15 +4,15 @@ cycle_duration_min=10  # duration of one measurement cycle in minutes
 consider_last_n_min=525600 #just for testing #10  # consider files generated in the last minutes normally equal to cycle duration. For longer periods make sure to use timestamp_style=cycle_start 
 echo "testversion with consider_last_n_min=525600 for sending all files generated in last year. Undo to =10 once test is done"
 
-data_dir=../data/rpg_rename/  # folder where original files are located (include tailing slash)
+data_dir=../data/rpg_rename_2/  # folder where original files are located (include tailing slash)
 eprof_dir=../data/rpg_rename/out/  # folder where E-PROFILE files are saved to before being sent to FTP  (include tailing slash)
 prefix_orig=test_
 prefix_eprof=MWR_GRE_A_
-len_timestamp_orig=12
+len_timestamp_orig=14
 
-timestamp_style=cycle_start  # cycle_start: assumed start of measurement cycle; min_in: smallest input timestamp matching period. CARE: min_in only works if consider_last_n_min makes sure that files from only one obs cycle are consdiered 
+timestamp_style=cycle_start  # style of output timestamp. cycle_start: assumed start of measurement cycle; min_in: smallest input timestamp found matching period. CARE: min_in only works if consider_last_n_min makes sure that files from only one obs cycle are consdiered 
 
-# you cannot change the following assumption unless modifying the search pattern
+# you cannot change the following assumption unless modifying the search pattern in the code
 len_ext=4  #length of extension including the dot
 
 # END OF INPUT
@@ -25,12 +25,25 @@ len_ext=4  #length of extension including the dot
 function filename2epoch {
     local filename=$1
     
-    local ts_sec=00
-    local ts_min=${filename:(-$(($len_ext+2))):2}
-    local ts_hour=${filename:(-$(($len_ext+4))):2}
-    local ts_date=${filename:(-$(($len_ext+12))):8}  
+    #init date (yyyymmdd HH MM SS)
+    date_array=(00000000 00 00 00)
     
-    ts_epoch=$(date --utc -d "$ts_date $ts_hour:$ts_min:$ts_sec" +"%s")
+    local start_ind=$((-len_ext-len_timestamp_orig))
+    for i in "${!date_array[@]}"
+    do
+        local len_chars=${#date_array[$i]}
+        local next_start_ind=$((start_ind+len_chars))
+        if [ "$next_start_ind" -gt "-$len_ext" ]
+        then
+            break
+        fi
+        
+        date_array[$i]=${filename:$start_ind:$len_chars}
+        start_ind=$next_start_ind
+    done
+    
+    ts_epoch=$(date --utc -d "${date_array[0]} ${date_array[1]}:${date_array[2]}:${date_array[3]}" +"%s")
+
 }
 
 function epoch2timestamp {
@@ -84,7 +97,7 @@ do
 	epoch2timestamp $time_for_stamp
     bn_file=$(basename $file)
     ext_file=${file##*.}
-    file_out=$eprof_dir$prefix_eprof${bn_file:$len_prefix_orig:-$(($len_ext+$len_timestamp_orig))}$stamp.$ext_file
+    file_out=$eprof_dir$prefix_eprof${bn_file:$len_prefix_orig:$((-$len_ext-$len_timestamp_orig))}$stamp.$ext_file
 	cp -v $file $file_out
 done
 
