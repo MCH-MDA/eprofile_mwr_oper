@@ -62,7 +62,7 @@ function epoch2timestamp {
 len_prefix_orig=${#prefix_orig}
 
 # getting data
-files=$(find $data_dir -maxdepth 1 \( -name "*.BRT" -o -name "*.BLB" -o -name "*.HKD" -o -name "*.MET" -o -name "*.IRT" \) -mmin -$consider_last_n_min)
+files=$(find $data_dir -maxdepth 1 \( -name "$prefix_orig*.BRT" -o -name "$prefix_orig*.BLB" -o -name "$prefix_orig*.HKD" -o -name "$prefix_orig*.MET" -o -name "$prefix_orig*.IRT" \) -mmin -$consider_last_n_min)
 
 # preparing for different timestamp options
 if [ "$timestamp_style" = "min_in" ]
