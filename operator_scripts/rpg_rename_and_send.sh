@@ -10,12 +10,18 @@ prefix_orig=test_
 prefix_eprof=MWR_GRE_A_
 len_timestamp_orig=14
 
+ftp_host=ftpweb.metoffice.gov.uk
+ftp_folder=/deposit/mwr/
+ftp_user=YOUR_USER
+ftp_pw=YOUR_PW
+
 timestamp_style=cycle_start  # style of output timestamp. cycle_start: assumed start of measurement cycle; min_in: smallest input timestamp found matching period. CARE: min_in only works if consider_last_n_min makes sure that files from only one obs cycle are consdiered 
 
 # you cannot change the following assumption unless modifying the search pattern in the code
 len_ext=4  #length of extension including the dot
 
 # END OF INPUT
+
 
 
 
@@ -56,7 +62,10 @@ function epoch2timestamp {
 
 
 
-# START OF SCRIPT
+# PREPARATION OF FILES FOR SUBMISSION
+
+# this part can be repeated for multiple instruments with same cycle duration and starts if wanting to use the same FTP send folder and command
+# in this case alter the variables data_dir, prefix_orig, prefix_eprof here. 
 
 # preparing
 len_prefix_orig=${#prefix_orig}
@@ -101,6 +110,36 @@ do
 	cp -v $file $file_out
 done
 
+# END OF PREPARATION OF FILES FOR SUBMISSION
 
-#TODO: send to FTP (use emermet script as example)
 
+
+
+# PUSH TO FTP AND EMPTY DIR
+echo "pushing data in $eprof_dir to E-PROFILE"
+
+path_here=$(pwd)
+cd $eprof_dir
+
+ftp -n $ftp_host <<END_SCRIPT
+quote USER $ftp_user
+quote PASS $ftp_pw
+prompt off
+binary
+cd $ftp_folder
+mput *.BRT
+mput *.BLB
+mput *.HKD
+mput *.MET
+mput *.IRT
+
+quit
+END_SCRIPT
+
+cd $path_here
+
+echo "emptying $eprof_dir"
+rm -v "$eprof_dir*.BRT $eprof_dir*.BLB $eprof_dir*.HKD $eprof_dir*.MET $eprof_dir*.IRT"  # rely on fact that only this script is writing to $eprof_dir
+
+
+# FTP AND CLEANUP DONE
