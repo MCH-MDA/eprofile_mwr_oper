@@ -1,14 +1,19 @@
 # INPUT
+
+# measurement cycle specification
 cycle_start_min=1  # minute when first new cycle of the day starts
 cycle_duration_min=10  # duration of one measurement cycle in minutes
 consider_last_n_min=525600 #just for testing #10  # consider files generated in the last minutes normally equal to cycle duration. For longer periods make sure to use timestamp_style=cycle_start 
 echo "testversion with consider_last_n_min=525600 for sending all files generated in last year. Undo to =10 once test is done"
 
+# instrument file and data dir specification
 data_dir=../data/rpg_rename_3/  # folder where original files are located (include tailing slash)
 eprof_dir=../data/rpg_rename/out/  # folder where E-PROFILE files are saved to before being sent to FTP  (include tailing slash)
 prefix_orig=test_
 prefix_eprof=MWR_GRE_A_
 
+#ftp settings
+do_ftp=0  # 1: send via ftp to target specified below; 0:don't send, just test
 ftp_host=ftpweb.metoffice.gov.uk
 ftp_folder=/deposit/mwr/
 ftp_user=YOUR_USER
@@ -21,7 +26,7 @@ len_sep_date_time=1  # length of separator between date and time in timestamp (u
 century=20  # century the timestamp is corresponding to
 
 # you cannot change the following assumption unless modifying the search pattern in the code
-len_ext=4  #length of extension including the dot
+len_ext=4  # length of extension including the dot
 
 # END OF INPUT
 
@@ -130,30 +135,34 @@ done
 
 
 # PUSH TO FTP AND EMPTY DIR
-echo "pushing data in $eprof_dir to E-PROFILE"
+if [ "$do_ftp" -ne 0 ]
+then
+    echo "pushing data in $eprof_dir to E-PROFILE"
 
-path_here=$(pwd)
-cd $eprof_dir
+    path_here=$(pwd)
+    cd $eprof_dir
 
-ftp -n $ftp_host <<END_SCRIPT
-quote USER $ftp_user
-quote PASS $ftp_pw
-prompt off
-binary
-cd $ftp_folder
-mput *.BRT
-mput *.BLB
-mput *.HKD
-mput *.MET
-mput *.IRT
+    ftp -n $ftp_host <<END_SCRIPT
+    quote USER $ftp_user
+    quote PASS $ftp_pw
+    prompt off
+    binary
+    cd $ftp_folder
+    mput *.BRT
+    mput *.BLB
+    mput *.HKD
+    mput *.MET
+    mput *.IRT
 
-quit
+    quit
 END_SCRIPT
 
-cd $path_here
+    cd $path_here
 
-echo "emptying $eprof_dir"
-rm -v "$eprof_dir*.BRT $eprof_dir*.BLB $eprof_dir*.HKD $eprof_dir*.MET $eprof_dir*.IRT"  # rely on fact that only this script is writing to $eprof_dir
-
+    echo "emptying $eprof_dir"
+    rm -v "$eprof_dir*.BRT $eprof_dir*.BLB $eprof_dir*.HKD $eprof_dir*.MET $eprof_dir*.IRT"  # rely on fact that only this script is writing to $eprof_dir
+else
+    echo "did not push to ftp as do_ftp was set to 0"
+fi
 
 # FTP AND CLEANUP DONE
