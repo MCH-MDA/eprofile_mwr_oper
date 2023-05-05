@@ -87,6 +87,7 @@ function epoch2timestamp {
 # in this case alter the variables data_dir, prefix_orig, prefix_eprof here. 
 
 # preparing
+umask 002  # give read and write permission to you and your group for output files (execute disablled by default)
 len_prefix_orig=${#prefix_orig}
 
 # getting data
