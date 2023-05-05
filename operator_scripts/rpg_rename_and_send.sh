@@ -1,15 +1,15 @@
 # INPUT
 
 # measurement cycle specification
-cycle_start_min=1  # minute when first new cycle of the day starts
-cycle_duration_min=10  # duration of one measurement cycle in minutes
-consider_last_n_min=525600 #just for testing #10  # consider files generated in the last minutes normally equal to cycle duration. For longer periods make sure to use timestamp_style=cycle_start 
-echo "testversion with consider_last_n_min=525600 for sending all files generated in last year. Undo to =10 once test is done"
+cycle_start_min=3  # minute when first new cycle of the day starts
+cycle_duration_min=5  # duration of one measurement cycle in minutes
+consider_last_n_min=5  # consider files generated in the last minutes. Normally equal to cycle duration. For longer periods make sure to use timestamp_style=cycle_start 
+
 
 # instrument file and data dir specification
-data_dir=../data/rpg_rename_3/  # folder where original files are located (include tailing slash)
-eprof_dir=../data/rpg_rename/out/  # folder where E-PROFILE files are saved to before being sent to FTP  (include tailing slash)
-prefix_orig=test_
+data_dir=/prod/pay/oper/cron/REM/TDBu/input-G5-184/  # folder where original files are located (include tailing slash)
+eprof_dir=/prod/pay/oper/cron/REM/TDBu/E-PROFILE/  # folder where E-PROFILE files are saved to before being sent to FTP  (include tailing slash)
+prefix_orig=GRE_
 prefix_eprof=MWR_GRE_A_
 
 #ftp settings
