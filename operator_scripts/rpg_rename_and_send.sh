@@ -13,11 +13,11 @@ prefix_orig=GRE_
 prefix_eprof=MWR_GRE_A_
 
 #ftp settings
-do_ftp=0  # 1: send via ftp to target specified below; 0:don't send, just test
+do_ftp=1  # 1: send via ftp to target specified below; 0:don't send, just test (files remain in eprof_dir in this case)
 ftp_host=ftpweb.metoffice.gov.uk
-ftp_folder=/deposit/mwr/
-ftp_user=YOUR_USER
-ftp_pw=YOUR_PW
+ftp_folder=deposit/mwr/
+ftp_user=___YOUR_USER___
+ftp_pw=___YOUR_PASSWORD____
 
 # the following are E-PROFILE/RPG defaults. Don't change unless having a good reason
 timestamp_style=cycle_start  # style of output timestamp. cycle_start: assumed start of measurement cycle; min_in: smallest input timestamp found matching period. CARE: min_in only works if consider_last_n_min makes sure that files from only one obs cycle are consdiered 
@@ -161,7 +161,7 @@ END_SCRIPT
     cd $path_here
 
     echo "emptying $eprof_dir"
-    rm -v "$eprof_dir*.BRT $eprof_dir*.BLB $eprof_dir*.HKD $eprof_dir*.MET $eprof_dir*.IRT"  # rely on fact that only this script is writing to $eprof_dir
+    rm -v "$eprof_dir"*.BRT "$eprof_dir"*.BLB "$eprof_dir"*.HKD "$eprof_dir"*.MET "$eprof_dir"*.IRT  # rely on fact that only this script is writing to $eprof_dir
 else
     echo "did not push to ftp as do_ftp was set to 0"
 fi
