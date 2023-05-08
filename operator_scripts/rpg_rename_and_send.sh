@@ -2,8 +2,10 @@
 
 # This script enables you to re-set the timestamps of the output files of your RPG Radiometer
 # in order to have a unique timestamp for all files of the same measurement cycle. This is needed
-# for the mwr_raw2l1 package to doubtlessely process coincident data. It also sets the required
-# filename prefix for identifying the instrument in E-PROFILE.
+# for the mwr_raw2l1 package to doubtlessely process coincident data. Identical timestamps for the
+# same measurement cycle defined throuhg MBF/MDF were not necessarily given for older generations. The
+# script also sets the required filename prefix for identifying the instrument in E-PROFILE. This 
+# procedure is applied to all level 1 filetypes, i.e. the extensions .BRT, .BLB, .HKD, .MET and .IRT.
 # In a second step the script sends all processed data to E-PROFILE by FTP. This step can be disabled
 # for internal usage or testing. 
 # The script can treat data from multiple instruments that have identical cycle duration and start times
