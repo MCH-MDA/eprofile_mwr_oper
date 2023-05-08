@@ -1,3 +1,20 @@
+#!/bin/bash
+
+# This script enables you to re-set the timestamps of the output files of your RPG Radiometer
+# in order to have a unique timestamp for all files of the same measurement cycle. This is needed
+# for the mwr_raw2l1 package to doubtlessely process coincident data. It also sets the required
+# filename prefix for identifying the instrument in E-PROFILE.
+# In a second step the script sends all processed data to E-PROFILE by FTP. This step can be disabled
+# for internal usage or testing. 
+# The script can treat data from multiple instruments that have identical cycle duration and start times
+# at once if they are available at a common central server (see example input below).
+#
+#
+# License: BSD 3-Clause License
+# Author: Rolf Ruefenacht, MeteoSwiss / E-PROFILE, 2023
+ 
+
+
 # INPUT
 
 # measurement cycle specification
@@ -7,6 +24,7 @@ consider_last_n_min=5  # consider files generated in the last minutes. Normally 
 
 
 # instrument file and data dir specification
+# (requires same length of arrays data_dirs, prefixes_org and prefixes_eprof)
 eprof_dir=/prod/pay/oper/cron/REM/TDBu/E-PROFILE/  # folder where E-PROFILE files are saved to before 
 # folders where original files are located being sent to FTP  (include tailing slash)
 data_dirs=(
@@ -29,20 +47,22 @@ prefixes_eprof=(
 
 
 #ftp settings
-do_ftp=1  # 1: send via ftp to target specified below; 0:don't send, just test (files remain in eprof_dir in this case)
+do_ftp=1  # 1: send via ftp to target specified below (files removed from eprof_dir); 0:don't send (files remain in eprof_dir)
 ftp_host=ftpweb.metoffice.gov.uk
 ftp_folder=deposit/mwr/
 ftp_user=___YOUR_USER___
 ftp_pw=___YOUR_PASSWORD____
+
 
 # the following are E-PROFILE/RPG defaults. Don't change unless having a good reason
 timestamp_style=cycle_start  # style of output timestamp. cycle_start: assumed start of measurement cycle; min_in: smallest input timestamp found matching period. CARE: min_in only works if consider_last_n_min makes sure that files from only one obs cycle are consdiered 
 len_timestamp_orig=13  # number of characters in timestamp including underlines, dashes etc. CARE: No fractions of seconds foreseen in timestamp
 len_sep_date_time=1  # length of separator between date and time in timestamp (usually 1 or 0). No separator foreseen between year/month/day and hour/minute/second 
 century=20  # century the timestamp is corresponding to
-
 # you cannot change the following assumption unless modifying the search pattern in the code
 len_ext=4  # length of extension including the dot
+
+
 
 # END OF INPUT
 
