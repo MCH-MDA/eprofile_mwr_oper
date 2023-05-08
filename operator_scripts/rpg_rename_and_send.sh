@@ -7,10 +7,26 @@ consider_last_n_min=5  # consider files generated in the last minutes. Normally 
 
 
 # instrument file and data dir specification
-data_dir=/prod/pay/oper/cron/REM/TDBu/input-G5-184/  # folder where original files are located (include tailing slash)
-eprof_dir=/prod/pay/oper/cron/REM/TDBu/E-PROFILE/  # folder where E-PROFILE files are saved to before being sent to FTP  (include tailing slash)
-prefix_orig=GRE_
-prefix_eprof=MWR_GRE_A_
+eprof_dir=/prod/pay/oper/cron/REM/TDBu/E-PROFILE/  # folder where E-PROFILE files are saved to before 
+# folders where original files are located being sent to FTP  (include tailing slash)
+data_dirs=(
+    /prod/pay/oper/cron/REM/TDBu/input-G5-184/
+    /prod/pay/oper/cron/REM/TDBu/input-G5-156/
+    /prod/pay/oper/cron/REM/TDBu/input-G2-T3/
+    )
+# prefixes of the original filenames
+prefixes_orig=(
+    GRE_
+    PAY_
+    SHA_
+    )
+# prefixes of the filenames to be sent to E-PROFILE
+prefixes_eprof=(
+    MWR_GRE_A_
+    MWR_PAY_A_
+    MWR_SHA_A_
+    )
+
 
 #ftp settings
 do_ftp=1  # 1: send via ftp to target specified below; 0:don't send, just test (files remain in eprof_dir in this case)
@@ -88,46 +104,57 @@ function epoch2timestamp {
 
 # preparing
 umask 002  # give read and write permission to you and your group for output files (execute disablled by default)
-len_prefix_orig=${#prefix_orig}
 
-# getting data
-files=$(find $data_dir -maxdepth 1 \( -name "$prefix_orig*.BRT" -o -name "$prefix_orig*.BLB" -o -name "$prefix_orig*.HKD" -o -name "$prefix_orig*.MET" -o -name "$prefix_orig*.IRT" \) -mmin -$consider_last_n_min)
-
-# preparing for different timestamp options
-if [ "$timestamp_style" = "min_in" ]
-then
-	min_time=$(date --utc +"%s")  #initialise minimum time with actual time
-	for file in $files
-	do
-		filename2epoch $file
-		min_time=$(( min_time < ts_epoch ? min_time : ts_epoch))
-	done
-	time_for_stamp=$min_time
-elif [ "$timestamp_style" = "cycle_start" ]
-then
-	cycle_duration_sec=$((cycle_duration_min*60))
-	cycle_start_sec=$((cycle_start_min*60))
-else
-	echo "timestamp_style is only allowed ot be set to cycle_start or min_in"
-	exit 1
-fi
-
-# copying and renaming files to eprof_dir
-for file in $files
+#loop over all stations
+for n in "${!prefixes_eprof[@]}"  
 do
-	# calculate timestamp if still needed
-    if [ "$timestamp_style" = "cycle_start" ]
-	then
-		filename2epoch $file
-		ts_shifted=$((ts_epoch-cycle_start_sec))
-        # use property that in bash "/" is integer division to round to multiples of cycle duration
-		time_for_stamp=$((ts_shifted/cycle_duration_sec*cycle_duration_sec+cycle_start_sec))
-	fi
-	epoch2timestamp $time_for_stamp
-    bn_file=$(basename $file)
-    ext_file=${file##*.}
-    file_out=$eprof_dir$prefix_eprof${bn_file:$len_prefix_orig:$((-$len_ext-$len_timestamp_orig))}$stamp.$ext_file
-	cp -v $file $file_out
+    data_dir=${data_dirs[$n]}
+    prefix_orig=${prefixes_orig[$n]}
+    prefix_eprof=${prefixes_eprof[$n]}
+    len_prefix_orig=${#prefix_orig}
+    
+    echo "===================================="
+    echo "preparing allowed MWR files matching $data_dir$prefixes_orig*"
+
+    # getting data
+    files=$(find $data_dir -maxdepth 1 \( -name "$prefix_orig*.BRT" -o -name "$prefix_orig*.BLB" -o -name "$prefix_orig*.HKD" -o -name "$prefix_orig*.MET" -o -name "$prefix_orig*.IRT" \) -mmin -$consider_last_n_min)
+
+    # preparing for different timestamp options
+    if [ "$timestamp_style" = "min_in" ]
+    then
+        min_time=$(date --utc +"%s")  #initialise minimum time with actual time
+        for file in $files
+        do
+            filename2epoch $file
+            min_time=$(( min_time < ts_epoch ? min_time : ts_epoch))
+        done
+        time_for_stamp=$min_time
+    elif [ "$timestamp_style" = "cycle_start" ]
+    then
+        cycle_duration_sec=$((cycle_duration_min*60))
+        cycle_start_sec=$((cycle_start_min*60))
+    else
+        echo "timestamp_style is only allowed ot be set to cycle_start or min_in"
+        exit 1
+    fi
+
+    # copying and renaming files to eprof_dir
+    for file in $files
+    do
+        # calculate timestamp if still needed
+        if [ "$timestamp_style" = "cycle_start" ]
+        then
+            filename2epoch $file
+            ts_shifted=$((ts_epoch-cycle_start_sec))
+            # use property that in bash "/" is integer division to round to multiples of cycle duration
+            time_for_stamp=$((ts_shifted/cycle_duration_sec*cycle_duration_sec+cycle_start_sec))
+        fi
+        epoch2timestamp $time_for_stamp
+        bn_file=$(basename $file)
+        ext_file=${file##*.}
+        file_out=$eprof_dir$prefix_eprof${bn_file:$len_prefix_orig:$((-$len_ext-$len_timestamp_orig))}$stamp.$ext_file
+        cp -v $file $file_out
+    done
 done
 
 # END OF PREPARATION OF FILES FOR SUBMISSION
@@ -135,10 +162,11 @@ done
 
 
 
-# PUSH TO FTP AND EMPTY DIR
+# PUSH ALL MWR FILES IN eprof_dir TO FTP AND EMPTY DIR
 if [ "$do_ftp" -ne 0 ]
 then
-    echo "pushing data in $eprof_dir to E-PROFILE"
+    echo "===================================="
+    echo "pushing data in $eprof_dir to E-PROFILE hub"
 
     path_here=$(pwd)
     cd $eprof_dir
@@ -161,7 +189,7 @@ END_SCRIPT
     cd $path_here
 
     echo "emptying $eprof_dir"
-    rm -v "$eprof_dir"*.BRT "$eprof_dir"*.BLB "$eprof_dir"*.HKD "$eprof_dir"*.MET "$eprof_dir"*.IRT  # rely on fact that only this script is writing to $eprof_dir
+    rm -v "$eprof_dir"*.BRT "$eprof_dir"*.BLB "$eprof_dir"*.HKD "$eprof_dir"*.MET "$eprof_dir"*.IRT  # rely on fact that only this script is writing and deleting in $eprof_dir
 else
     echo "did not push to ftp as do_ftp was set to 0"
 fi
