@@ -34,17 +34,17 @@ data_dirs=(
     /prod/pay/oper/cron/REM/TDBu/input-G5-156/
     /prod/pay/oper/cron/REM/TDBu/input-G2-T3/
     )
-# prefixes of the original filenames
+# prefixes of the original filenames (part of filename before timestamp)
 prefixes_orig=(
     GRE_
     PAY_
     SHA_
     )
-# prefixes of the filenames to be sent to E-PROFILE
+# prefixes of the filenames to be sent to E-PROFILE (part of filename before timestamp)
 prefixes_eprof=(
-    MWR_GRE_A_
-    MWR_PAY_A_
-    MWR_SHA_A_
+    MWR_GRE_A
+    MWR_PAY_A
+    MWR_SHA_A
     )
 
 
