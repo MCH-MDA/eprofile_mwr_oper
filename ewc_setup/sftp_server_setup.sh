@@ -12,8 +12,13 @@ sudo tee -a /etc/ssh/sshd_config > /dev/null <<EOT
 
 # Set up SFTP
 Match group $SFTP_GROUPNAME
-ChrootDirectory $SFTP_ROOTDIR/%u
-ForceCommand internal-sftp
+    ChrootDirectory $SFTP_ROOTDIR/%u
+    ForceCommand internal-sftp
+    PermitRootLogin no
+    RSAAuthentication yes
+    PubkeyAuthentication yes
+    AuthorizedKeysFile $SFTP_ROOTDIR/%u/.ssh/authorized_keys
+    #PasswordAuthentication no
 EOT
 
 
