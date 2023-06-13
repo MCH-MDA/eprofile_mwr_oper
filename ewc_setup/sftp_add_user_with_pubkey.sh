@@ -4,9 +4,8 @@
 
 uname=$1
 pubkey=$2
-
-SFTP_ROOTDIR='/sftp'
-SFTP_GROUPNAME='sftp'
+SFTP_ROOTDIR=${3:-/sftp}
+SFTP_GROUPNAME=${4:-sftp}
 
 ## add user to sftp group
 sudo useradd -g $SFTP_GROUPNAME -d /upload -s /sbin/nologin $uname  #don't use -p option, rather go for subsequent call to passwd

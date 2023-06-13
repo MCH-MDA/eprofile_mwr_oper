@@ -1,7 +1,7 @@
 # This script sets up SFTP config and group. Add users with distinct script
 
-SFTP_ROOTDIR='/sftp'
-SFTP_GROUPNAME='sftp'
+SFTP_ROOTDIR=${1:-/sftp}
+SFTP_GROUPNAME=${2:-sftp}
 
 ## create SFTP directory
 sudo mkdir -p $SFTP_ROOTDIR
@@ -18,7 +18,7 @@ Match group $SFTP_GROUPNAME
     RSAAuthentication yes
     PubkeyAuthentication yes
     AuthorizedKeysFile $SFTP_ROOTDIR/%u/.ssh/authorized_keys
-    #PasswordAuthentication no
+    PasswordAuthentication yes
 EOT
 
 

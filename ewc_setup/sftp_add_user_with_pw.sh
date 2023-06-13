@@ -1,7 +1,7 @@
 # This script interactively adds a new user to a previously configured SFTP usergroup
 
-SFTP_ROOTDIR='/sftp'
-SFTP_GROUPNAME='sftp'
+SFTP_ROOTDIR=${1:-/sftp}
+SFTP_GROUPNAME=${2:-sftp}
 
 ## add user to sftp group
 read -p 'SFTP User Name: ' uname
