@@ -16,7 +16,7 @@ if [ ! -f "$LOCAL_KEY" ]; then
 fi
 
 # generate sftp user
-$path_script/sftp_add_user_wit_pubkey.sh $SFTP_USER $LOCAL_KEY.pub $SFTP_ROOTDIR $SFTP_GROUPNAME
+$path_script/sftp_add_user_with_pubkey.sh $SFTP_USER $LOCAL_KEY.pub $SFTP_ROOTDIR $SFTP_GROUPNAME
 
 # add MetOffice key to sftp user
 cat "$PUBKEY_UKMO" | sudo tee -a $SFTP_ROOTDIR/$SFTP_USER/.ssh/authorized_keys
