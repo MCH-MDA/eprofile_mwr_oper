@@ -1,6 +1,7 @@
-# This script adds a new user to a previously configured SFTP usergroup.
+# This script adds a new user to a previously configured SFTP usergroup. 
+# It takes 2 mandatory and 2 optiona arguments
 #
-# sftp_add_user_with_pubkey.sh USERNAME PUBKEY_FILE
+# sftp_add_user_with_pubkey.sh USERNAME PUBKEY_FILE [SFTP_ROOTDIR SFTP_GROUPNAME]
 
 uname=$1
 pubkey=$2

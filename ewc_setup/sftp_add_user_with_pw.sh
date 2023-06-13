@@ -1,4 +1,8 @@
 # This script interactively adds a new user to a previously configured SFTP usergroup
+# It takes 2 optional arguments
+# 
+# sftp_add_user_with_pw.sh [SFTP_ROOTDIR SFTP_GROUPNAME]
+
 
 SFTP_ROOTDIR=${1:-/sftp}
 SFTP_GROUPNAME=${2:-sftp}

@@ -1,6 +1,13 @@
-# install a more recent version of python set alias for python and python3 to this new version and upgrade pip
+# This script installs a more recent version of python. It also sets alias for python and python3
+# to this new version and upgrades pip (needed for installing from pyproject.toml)
+
 
 PYTHON_VERSION=python3.8
+
+echo 
+echo "Installing $PYTHON_VERSION and updating pip"
+echo "========================================"
+echo
 
 # the following does not work on EWC and is not needed for python3.8
 # # add deadsnakes as some python versions are not automatically available via apt 

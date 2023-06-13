@@ -1,3 +1,10 @@
+# This script mainly instructs the user what to do for setting up mars"
+
+echo 
+echo "To set up mars follow the steps below:"
+echo "======================================"
+echo
+
 echo "Setting up mars"
 echo "  !!! CARE: Make sure to have your API key registered on this machine !!!"
 echo "      get it in your ECMWF account at https://apps.ecmwf.int/v1/key"

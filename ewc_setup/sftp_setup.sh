@@ -1,3 +1,7 @@
+# This script sets up the SFTP server and the generation of a user including the registration of 
+# local and MetOffice ssh keys for it
+
+
 path_script=$(dirname "$0")
 
 SFTP_ROOTDIR='/sftp'

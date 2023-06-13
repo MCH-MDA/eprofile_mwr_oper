@@ -1,4 +1,8 @@
-# This script sets up SFTP config and group. Add users with distinct script
+# This script sets up SFTP config and group. For adding users use distinct scripts
+# It takes 2 optional arguments
+# 
+# sftp_server_setup.sh [SFTP_ROOTDIR SFTP_GROUPNAME]
+
 
 SFTP_ROOTDIR=${1:-/sftp}
 SFTP_GROUPNAME=${2:-sftp}

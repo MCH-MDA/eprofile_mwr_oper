@@ -1,5 +1,3 @@
-#!/bin/bash
-#
 # install and set up podman
 
 # prepare apt to get podman
