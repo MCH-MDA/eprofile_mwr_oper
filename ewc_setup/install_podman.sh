@@ -11,6 +11,7 @@ sudo apt update
 sudo apt -y install uidmap  # contains newuidmap required for rootless execution of podman
 sudo apt -y install fuse-overlayfs  # used as overlay for rootless execution
 sudo apt -y install containernetworking-plugins  # for bridge, portmap, firewall and tuning commands
+sudo apt -y install slirp4netns  # for namespaces in rootless podman execution
 sudo apt -y install podman
 
 # configure podman to use fuse-overlayfs
