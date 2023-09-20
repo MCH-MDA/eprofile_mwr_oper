@@ -136,7 +136,7 @@ do
     len_prefix_orig=${#prefix_orig}
     
     echo "===================================="
-    echo "preparing allowed MWR files matching $data_dir$prefixes_orig*"
+    echo "preparing allowed MWR files matching $data_dir$prefix_orig*"
 
     # getting data
     files=$(find $data_dir -maxdepth 1 \( -name "$prefix_orig*.BRT" -o -name "$prefix_orig*.BLB" -o -name "$prefix_orig*.HKD" -o -name "$prefix_orig*.MET" -o -name "$prefix_orig*.IRT" \) -mmin -$consider_last_n_min)
