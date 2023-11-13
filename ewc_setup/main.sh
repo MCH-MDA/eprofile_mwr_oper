@@ -7,6 +7,7 @@ echo "setting up new VM from scratch"
 echo "=============================="
 echo
 
+chmod a+x $path_scripts/*.sh  # make sure all bash scripts are executable
 
 $path_scripts/update_python.sh
 $path_scripts/install_ecmwf_libs.sh
