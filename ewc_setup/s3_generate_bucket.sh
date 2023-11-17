@@ -10,7 +10,7 @@ then
 fi
 
 # abort if bucket already exists
-s3cmd info s3://eprofile-dl-ra > /dev/null 2>&1
+s3cmd info s3://$BUCKET_NAME > /dev/null 2>&1
 if [ $? -eq 0 ]
 then
     echo "bucket s3://$BUCKET_NAME does already exist. Refusing to change anything on it"
