@@ -1,2 +1,3 @@
 operator_scripts/rpg_rename_and_send_mch.sh
 data/*
+ewc.conf
