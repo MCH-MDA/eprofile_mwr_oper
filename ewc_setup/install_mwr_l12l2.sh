@@ -13,5 +13,5 @@ act_path=$(pwd)
 cd $base_dir
 git clone https://github.com/MeteoSwiss/mwr_l12l2
 cd mwr_l12l2
-pip3 install .  # don't need a virtual environment here, as this is the only python code running on this VM
+pip3 install -e .  # don't need a virtual environment here, as this is the only python code running on this VM
 cd $act_path
