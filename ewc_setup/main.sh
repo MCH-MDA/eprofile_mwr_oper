@@ -9,6 +9,9 @@ echo
 
 chmod a+x $path_scripts/*.sh  # make sure all bash scripts are executable
 
+# check config can be read, otherwise exit without further action
+$path_scripts/get_config.sh || exit 2
+
 $path_scripts/update_python.sh
 $path_scripts/install_ecmwf_libs.sh
 $path_scripts/install_podman.sh
