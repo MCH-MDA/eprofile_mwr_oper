@@ -14,6 +14,9 @@ sudo apt -y install containernetworking-plugins  # for bridge, portmap, firewall
 sudo apt -y install slirp4netns  # for namespaces in rootless podman execution
 sudo apt -y install podman
 
+# Add possibility to use podman with crons, see issue https://github.com/containers/podman/issues/7242
+loginctl enable-linger 1000
+
 # configure podman to use fuse-overlayfs
 mkdir -p ~/.config/containers
 cat <<EOT >> ~/.config/containers/storage.conf
