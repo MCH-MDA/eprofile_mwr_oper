@@ -12,6 +12,6 @@ echo "      then do the following: mars --token MY_API_KEY --email MY_EMAIL"
 
 echo "Setting up webmars"
 echo "  !!! CARE: make sure to remove webmars settings once EWC has moved to Bologna !"
-echo "export MARS_ENVIRON_ORIGIN=webmars" >> ~/.profile
-echo "export MARS_ENVIRON_ORIGIN=webmars" >> ~/.bashrc
+echo "#export MARS_ENVIRON_ORIGIN=webmars" >> ~/.profile
+echo "#export MARS_ENVIRON_ORIGIN=webmars" >> ~/.bashrc
 
