@@ -20,4 +20,4 @@ $path_scripts/install_mwr_l12l2.sh
 $path_scripts/mars_setup.sh
 $path_scripts/install_s3.sh
 #$path_scripts/s3_create_buckets.sh eprofile-mwr-l1 eprofile-mwr-l2 eprofile-alc-l2  # comment this out if buckets alredy exist
-$path_scripts/s3_automount_buckets.sh eprofile-mwr-l1 eprofile-mwr-l2 eprofile-alc-l2
+$path_scripts/s3_automount_buckets.sh eprofile-mwr-l1 eprofile-mwr-l2 eprofile-alc-l2 eprofile-ecmwf-data
