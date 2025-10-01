@@ -8,7 +8,8 @@ echo
 echo "Setting up mars"
 echo "  !!! CARE: Make sure to have your API key registered on this machine !!!"
 echo "      get it in your ECMWF account at https://apps.ecmwf.int/v1/key"
-echo "      then do the following: mars --token MY_API_KEY --email MY_EMAIL"
+echo "      then do the following: mars --token MY_API_KEY --email MY_EMAIL"nano
+echo "please visit https://api.ecmwf.int/v1/key/ and copy your credentials to ~/.ecmwfapirc"
 
 echo "Setting up webmars"
 echo "  !!! CARE: make sure to remove webmars settings once EWC has moved to Bologna !"
